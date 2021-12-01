@@ -1,27 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: cado-car <cado-car@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/08 18:03:19 by cado-car          #+#    #+#             */
-/*   Updated: 2021/08/11 22:06:38 by cado-car         ###   ########lyon.fr   */
-/*                                                                            */
-/* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
-
-/* 
-*	LIBFT FUNCTIONS
-*	---------------
-*	To view full documentation, check the libft repo for the following:
-*	#1. ft_strchr.c
-*	#2. ft_strlcpy.c
-*	#3. ft_strjoin.c
-*	#4. ft_strdup.c
-*	#1. ft_substr.c
-*/
 
 char	*ft_strchr(const char *s, int c)
 {

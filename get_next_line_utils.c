@@ -1,25 +1,24 @@
 
 
+#include "get_next_line.h"
+
 char	*ft_strchr(const char *s, int c)
 {
 	int		i;
-	char	ch;
 
-	ch = (unsigned char)c;
 	i = 0;
 	if (!s)
-		return (NULL);
-	while (s[i] != '\0')
+		return (0);
+	while (s[i])
 	{
-		if (s[i] == ch)
+		if (s[i] == c)
 			return ((char *)(&s[i]));
 		i++;
 	}
-	if (ch == '\0')
+	if (c == 0)
 		return ((char *)&s[i]);
-	return (NULL);
+	return (0);
 }
-
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;

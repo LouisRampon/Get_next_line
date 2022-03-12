@@ -1,96 +1,112 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lorampon <lorampon@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 13:19:26 by lorampon          #+#    #+#             */
+/*   Updated: 2022/03/12 17:52:16 by lorampon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+int main (int argc, char **argv)
 {
-	static char		*buff_read = 0;
-	char			*buffer;
-	char			*line;
-	ssize_t			n;
+    int fd;
+    int     i;
+	char *str;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (0);
-	if (read(fd, buffer, 0) < 0)
-	{
-		free(buffer);
-		return (0);
-	}
-	if (!buff_read)
-		buff_read = ft_strdup("");
-	n = read_file(fd, &buffer, &buff_read, &line);
-	if (n == 0 && !line)
-		return (0);
-	return (line);
+    i = 0;
+    fd = open("bite.txt", O_RDONLY);
+    while (i < 10)
+    {
+		str = get_next_line(fd);
+        printf("%s", str);
+        i++;
+    }
+    close(fd);
+	free(str);
+    return (0);
 }
 
-ssize_t	read_file(int fd, char **buffer, char **buff_read, char **line)
+char    *get_next_line(int fd)
 {
-	char	*temp;
-	ssize_t	n;
+    static char    *str = NULL;
+    char    buff[BUFFER_SIZE + 1];
+    int     i;
+	char *temp;
 
-	n = 1;
-	while (!ft_strchr(*buff_read, '\n') && n)
-	{
-		n = read(fd, *buffer, BUFFER_SIZE);
-		(*buffer)[n] = '\0';
-		temp = *buff_read;
-		*buff_read = ft_strjoin(temp, *buffer);
-		free(temp);
-	}
-	free(*buffer);
-	*buffer = 0;
-	*buff_read = get_line(buff_read, line);
-	if (**line == '\0')
-	{
-		free(*line);
-		*line = 0;
-	}
-	return (n);
+    if (fd < 0 || BUFFER_SIZE < 1)
+        return (NULL);
+    i = 1;
+    while (i > 0)
+    {
+        i = read(fd, buff, BUFFER_SIZE);
+        if ((i == -1) || (i == 0 && !str))
+			return (NULL);
+		buff[i] = '\0';
+		str = ft_buff_to_string(buff, str);
+        if(ft_strchr(str, '\n') || (i == 0 && str[0]))
+		{
+			temp = ft_parse_string(str);
+			str = &str[ft_strnlen(temp) + 1];
+			return (temp);
+		}
+    }
+	free(str);
+	return (NULL);
 }
 
-char	*get_line(char **buff_read, char **line)
+char	*ft_parse_string(char *str)
 {
+	char *temp;
+	
+	temp = ft_strndup(str);
+	free(str);
+	return(temp);
+}
+
+char	*ft_buff_to_string(char *buff, char *str)
+{
+	char *temp;
+	
+	if(str)
+        {
+            temp = ft_strjoin(str, buff);
+			str = NULL;
+			free(str);
+        }
+    else 
+		temp = ft_strdup(buff);
+	return(temp);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*str;
 	size_t	i;
-	char	*new_buff;
+	size_t	j;
 
 	i = 0;
-	new_buff = 0;
-	while ((*(*buff_read + i) != '\n') && (*(*buff_read + i) != '\0'))
-		i++;
-	if (*(*buff_read + i) == '\n')
+	if (!s1 || !s2)
+		return (0);
+	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
+		return (0);
+	while (s1[i])
 	{
-		i++;
-		*line = ft_substr(*buff_read, 0, i);
-		new_buff = ft_strdup(*buff_read + i);
-	}
-	else
-		*line = ft_strdup(*buff_read);
-	free(*buff_read);
-	*buff_read = 0;
-	return (new_buff);
-}
-
-int	main(void)
-{
-	char *line;
-	int	fd;
-	int	i;
-
-	fd = open("bite.txt", O_RDONLY);
-	i = 1;
-	while (i < 40)
-	{
-		line = get_next_line(fd);
-		printf("line [%d]: %s", i, line);
-		free (line);
+		str[i] = s1[i];
 		i++;
 	}
-	close(fd);
-	return (0);
+	j = 0;
+	while (s2[j])
+	{
+		str[i] = s2[j];
+		i++;
+		j++;
+	}
+	str[i] = '\0';
+	return (str);
 }
-
-
-

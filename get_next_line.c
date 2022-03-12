@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lorampon <lorampon@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/05 13:19:26 by lorampon          #+#    #+#             */
-/*   Updated: 2022/03/12 17:52:16 by lorampon         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "get_next_line.h"
 
@@ -16,6 +5,7 @@ int main (int argc, char **argv)
 {
     int fd;
     int     i;
+
 	char *str;
 
     i = 0;
@@ -34,6 +24,7 @@ int main (int argc, char **argv)
 char    *get_next_line(int fd)
 {
     static char    *str = NULL;
+
     char    buff[BUFFER_SIZE + 1];
     int     i;
 	char *temp;
@@ -46,6 +37,7 @@ char    *get_next_line(int fd)
         i = read(fd, buff, BUFFER_SIZE);
         if ((i == -1) || (i == 0 && !str))
 			return (NULL);
+
 		buff[i] = '\0';
 		str = ft_buff_to_string(buff, str);
         if(ft_strchr(str, '\n') || (i == 0 && str[0]))
@@ -69,6 +61,7 @@ char	*ft_parse_string(char *str)
 }
 
 char	*ft_buff_to_string(char *buff, char *str)
+
 {
 	char *temp;
 	
@@ -87,26 +80,74 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*str;
 	size_t	i;
-	size_t	j;
 
 	i = 0;
-	if (!s1 || !s2)
+	while (str[i])
+		i++;
+	return (i);
+}
+
+size_t	ft_strnlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\n' && str[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strdup(const char *src)
+{
+	char	*dest;
+	int		i;
+
+	i = 0;
+	dest = malloc(sizeof(*src) * (ft_strlen(src) + 1));
+	if (!dest)
 		return (0);
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		return (0);
-	while (s1[i])
+	while (src[i])
 	{
-		str[i] = s1[i];
+		dest[i] = src[i];
 		i++;
 	}
-	j = 0;
-	while (s2[j])
+	dest[i] = '\0';
+	return (dest);
+}
+
+char	*ft_strndup(const char *src)
+{
+	char	*dest;
+	int		i;
+
+	i = 0;
+	dest = malloc(sizeof(*src) * (ft_strnlen(src) + 1));
+	if (!dest)
+		return (0);
+	while (src[i] != '\n' && src[i])
 	{
-		str[i] = s2[j];
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\n';
+    dest[i + 1] = '\0'; 
+	return (dest);
+}
+
+char	*ft_strchr(const char *str, int c)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == (char)c)
+			return ((char *)&str[i]);
 		i++;
 		j++;
 	}
-	str[i] = '\0';
-	return (str);
+	if (str[i] == (char)c)
+		return ((char *)&str[i]);
+	return (0);
+
 }

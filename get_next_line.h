@@ -20,6 +20,7 @@ char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *src);
 char	*ft_strndup(const char *src);
 size_t	ft_strnlen(const char *str);
-
+char	*ft_buff_to_string(char *buff, char *str);
+char	*ft_parse_string(char *str);
 #endif
 

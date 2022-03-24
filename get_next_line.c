@@ -25,7 +25,6 @@ int main (int argc, char **argv)
 char    *get_next_line(int fd)
 {
     static char    *str = NULL;
-	static int		line = 0;
 	char	*temp;
     char    buff[BUFFER_SIZE + 1];
     int     i;

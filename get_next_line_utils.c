@@ -45,7 +45,7 @@ char	*ft_strndup(const char *src)
 
 	i = 0;
 	dest = malloc(sizeof(*src) * (ft_strnlen(src) + 1));
-	if (!dest)
+	if (!dest || !src)
 		return (0);
 	while (i < (ft_strnlen(src) + 1) && src[i])
 	{

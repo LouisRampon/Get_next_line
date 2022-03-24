@@ -9,12 +9,13 @@ int main (int argc, char **argv)
 	char *str;
 
     i = 0;
-    fd = open("bite.txt", O_RDONLY);
-    while (i < 10)
+    fd = open("gnlTester/files/alternate_line_nl_with_nl", O_RDONLY);
+	str = get_next_line(fd);
+    while (str)
     {
-		str = get_next_line(fd);
         printf("%s", str);
-        i++;
+		free(str);
+		str = get_next_line(fd);
     }
     close(fd);
 	free(str);
@@ -24,10 +25,10 @@ int main (int argc, char **argv)
 char    *get_next_line(int fd)
 {
     static char    *str = NULL;
-
+	static int		line = 0;
+	char	*temp;
     char    buff[BUFFER_SIZE + 1];
     int     i;
-	char *temp;
 
     if (fd < 0 || BUFFER_SIZE < 1)
         return (NULL);
@@ -37,117 +38,57 @@ char    *get_next_line(int fd)
         i = read(fd, buff, BUFFER_SIZE);
         if ((i == -1) || (i == 0 && !str))
 			return (NULL);
-
 		buff[i] = '\0';
 		str = ft_buff_to_string(buff, str);
         if(ft_strchr(str, '\n') || (i == 0 && str[0]))
 		{
-			temp = ft_parse_string(str);
-			str = &str[ft_strnlen(temp) + 1];
+			temp = ft_strndup(str);
+			str = &str[ft_strnlen(str) + 1];
+			//printf("str = %s //fin", str);
 			return (temp);
 		}
-    }
-	free(str);
-	return (NULL);
-}
-
-char	*ft_parse_string(char *str)
-{
-	char *temp;
-	
-	temp = ft_strndup(str);
-	free(str);
-	return(temp);
+	}
+	return (0);
 }
 
 char	*ft_buff_to_string(char *buff, char *str)
-
 {
 	char *temp;
 	
 	if(str)
         {
-            temp = ft_strjoin(str, buff);
-			str = NULL;
-			free(str);
+			temp = str;
+            str = ft_strjoin(temp, buff);
         }
-    else 
-		temp = ft_strdup(buff);
-	return(temp);
+    else
+		str = ft_strdup(buff);
+	return(str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
 	size_t	i;
+	size_t	j;
 
 	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-size_t	ft_strnlen(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '\n' && str[i])
-		i++;
-	return (i);
-}
-
-char	*ft_strdup(const char *src)
-{
-	char	*dest;
-	int		i;
-
-	i = 0;
-	dest = malloc(sizeof(*src) * (ft_strlen(src) + 1));
-	if (!dest)
+	if (!s1 || !s2)
 		return (0);
-	while (src[i])
+	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!str)
+		return (0);
+	while (s1[i])
 	{
-		dest[i] = src[i];
+		str[i] = s1[i];
 		i++;
 	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-char	*ft_strndup(const char *src)
-{
-	char	*dest;
-	int		i;
-
-	i = 0;
-	dest = malloc(sizeof(*src) * (ft_strnlen(src) + 1));
-	if (!dest)
-		return (0);
-	while (src[i] != '\n' && src[i])
+	j = 0;
+	while (s2[j])
 	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\n';
-    dest[i + 1] = '\0'; 
-	return (dest);
-}
-
-char	*ft_strchr(const char *str, int c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == (char)c)
-			return ((char *)&str[i]);
+		str[i] = s2[j];
 		i++;
 		j++;
 	}
-	if (str[i] == (char)c)
-		return ((char *)&str[i]);
-	return (0);
-
+	str[i] = '\0';
+	return (str);
 }

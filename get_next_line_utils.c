@@ -47,11 +47,13 @@ char	*ft_strndup(const char *src)
 	dest = malloc(sizeof(*src) * (ft_strnlen(src) + 1));
 	if (!dest || !src)
 		return (0);
-	while (i < (ft_strnlen(src) + 1) && src[i])
+	while (i < (ft_strnlen(src)) && src[i])
 	{
 		dest[i] = src[i];
 		i++;
 	}
+	if (src[i] == '\n')
+		dest[i] = '\n';
     dest[i + 1] = '\0'; 
 	return (dest);
 }

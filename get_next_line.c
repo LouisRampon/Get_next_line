@@ -39,7 +39,7 @@ char    *get_next_line(int fd)
 			return (NULL);
 		buff[i] = '\0';
 		str = ft_buff_to_string(buff, str);
-        if(ft_strchr(str, '\n') || (i == 0 && str[0]))
+        if(ft_strchr(str, '\n'))
 		{
 			temp = ft_strndup(str);
 			str = &str[ft_strnlen(str) + 1];
@@ -47,7 +47,13 @@ char    *get_next_line(int fd)
 			return (temp);
 		}
 	}
-	return (0);
+	if (str && !str[0])
+		temp = NULL;
+	else
+		temp = ft_strdup(str);
+	free(str);
+	str = NULL;
+	return (temp);
 }
 
 char	*ft_buff_to_string(char *buff, char *str)
@@ -57,7 +63,7 @@ char	*ft_buff_to_string(char *buff, char *str)
 	if(str)
         {
 			temp = str;
-            str = ft_strjoin(temp, buff);
+            str = ft_strjoin(temp, buff);	
         }
     else
 		str = ft_strdup(buff);
